@@ -18,6 +18,18 @@
     </div>
   </div>
 
+  <div id="siteDialog" class="site-dialog" aria-hidden="true">
+    <div class="site-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="siteDialogTitle">
+      <p id="siteDialogKicker" class="site-dialog-kicker">Notice</p>
+      <h2 id="siteDialogTitle">SN Development</h2>
+      <p id="siteDialogMessage"></p>
+      <div class="site-dialog-actions">
+        <button id="siteDialogCancel" class="btn-outline" type="button">Cancel</button>
+        <button id="siteDialogConfirm" class="btn-primary" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
   <a href="#home" class="corner-logo" aria-label="SN Development home">
     <img src="img/logo-sinfondo.png" alt="SN Development logo">
   </a>
@@ -81,7 +93,8 @@
             <h1 class="hero-title reveal">Premium FiveM Development</h1>
             <p class="hero-subtitle mt-6 reveal reveal-delay-1">High-quality scripts designed to elevate your roleplay experience with unmatched performance and reliability.</p>
             <div class="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start reveal reveal-delay-2">
-              <a href="#scripts" class="btn-primary">Explore SN Phone</a>
+              <button class="btn-primary hero-connect-btn" type="button" data-tebex-login>Connect FiveM</button>
+              <a href="#scripts" class="btn-outline">Explore Products</a>
               <a href="https://discord.gg/Z9mhaCbPvR" class="btn-outline" target="_blank" rel="noopener noreferrer">Join Discord</a>
             </div>
         </div>
@@ -96,31 +109,7 @@
           <p class="section-subtitle mt-4 reveal reveal-delay-1">A focused phone experience for modern roleplay servers</p>
         </div>
 
-        <div class="scripts-list">
-          <article class="script-item reveal reveal-delay-1">
-            <div class="script-item-inner">
-              <div class="script-content">
-                <span class="script-label script-tag-blue">Phone</span>
-                <h3>SN Phone OS 26 - v1.0</h3>
-                <p>A modern in-game phone for FiveM with apps, contacts, messaging, calls, banking hooks, and a clean OS 26 inspired interface built for roleplay servers.</p>
-                <div class="script-meta">
-                  <span class="script-tag-green">Messages & Calls</span>
-                  <span class="script-tag-orange">App System</span>
-                  <span class="script-tag-purple">Roleplay Ready</span>
-                </div>
-                <div class="script-actions">
-                  <button class="btn-outline" type="button" data-tebex-login>Login FiveM</button>
-                  <button class="btn-primary" type="button" data-tebex-buy>Buy Now</button>
-                  <a href="#" class="btn-outline" data-images="img/snphone.png" aria-haspopup="dialog">See Screenshots</a>
-                </div>
-              </div>
-              <div class="script-preview script-preview-phone">
-                <img src="img/snphone.png" alt="SN Phone OS 26 Preview">
-              </div>
-            </div>
-          </article>
-
-        </div>
+        <div class="scripts-list" id="productsList"></div>
       </div>
     </section>
 
@@ -285,6 +274,11 @@
   </div>
 
   <div id="subPagesContainer" class="relative">
+    <!-- Product Details -->
+    <div id="productPage" class="sub-page product-page">
+      <div id="productDetail" class="product-detail-shell"></div>
+    </div>
+
     <!-- Documentation -->
     <div id="docsPage" class="sub-page docs-page">
       <div class="docs-shell">
@@ -430,6 +424,6 @@
       </div>
     </div>
   </div>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

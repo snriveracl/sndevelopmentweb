@@ -63,77 +63,160 @@
       });
     })();
 
-    const documentationContent = {
-      title: 'SN Phone OS 26',
-      summary: 'Official setup notes, configuration references, and workflow tips for SN Phone OS 26.',
-      heroTitle: 'SN Phone OS 26 Documentation',
-      heroText: 'Set up the phone, connect your server resources, and tune the experience for your roleplay community.',
-      sections: [
-        {
-          id: 'overview',
-          title: 'Overview',
-          body: 'SN Phone OS 26 is a modern FiveM phone resource focused on fast roleplay workflows, polished app navigation, and clean integration points for server owners.',
-          list: [
-            'Responsive phone interface inspired by modern mobile operating systems.',
-            'Core apps for contacts, calls, messages, banking hooks, and server utilities.',
-            'Config-first setup so features can be enabled, disabled, or renamed without editing core files.'
-          ]
-        },
-        {
-          id: 'installation',
-          title: 'Installation',
-          body: 'Place the resource in your server resources folder, add it to your server start order, then configure the framework and database settings before restart.',
-          list: [
-            'Drag sn-phone into your resources folder.',
-            'Add ensure sn-phone after your framework, inventory, and database resources.',
-            'Import the SQL file if your package includes one.',
-            'Restart the server and check the console for missing dependencies.'
-          ],
-          code: 'ensure oxmysql\nensure qb-core\nensure sn-phone'
-        },
-        {
-          id: 'configuration',
-          title: 'Configuration',
-          body: 'Most server-specific behavior should be edited from the config file. Update labels, enabled apps, framework mode, item names, and command permissions there.',
-          code: "Config = {\n  Framework = 'qb',\n  Locale = 'en',\n  PhoneItem = 'phone',\n  EnableBanking = true,\n  EnableDispatch = true,\n  Debug = false\n}"
-        },
-        {
-          id: 'apps',
-          title: 'Apps',
-          body: 'Apps can be enabled per server style. Keep only the tools your community actually uses so the phone stays fast and easy to navigate.',
-          list: [
-            'Messages and calls for player communication.',
-            'Contacts for saved numbers and quick actions.',
-            'Banking integrations for balances and transfers.',
-            'Custom app slots for future server-specific systems.'
-          ]
-        },
-        {
-          id: 'support',
-          title: 'Support',
-          body: 'For support, prepare your server console errors, framework version, dependency list, and a short explanation of what you expected to happen.',
-          list: [
-            'Confirm all dependencies start before sn-phone.',
-            'Test with Debug enabled only while troubleshooting.',
-            'Share screenshots or console logs when opening a ticket.'
-          ]
-        }
-      ]
-    };
-
     const tebexConfig = {
       publicToken: '11bzo-d17911297d5f27208d2a2a048a2c86ba742f9ab2',
-      packageId: 7390265,
       webstoreUrl: 'https://sn-development-store.tebex.io',
       pendingBasketKey: 'sn_tebex_pending_basket',
       authedBasketKey: 'sn_tebex_authed_basket'
     };
 
+    const products = [
+      {
+        id: 'sn-phone',
+        tebexPackageId: 7390265,
+        name: 'SN Phone OS 26',
+        version: 'v1.0',
+        label: 'Phone',
+        shortDescription: 'A modern in-game phone for FiveM with apps, contacts, messaging, calls, banking hooks, and a clean OS 26 inspired interface built for roleplay servers.',
+        description: 'SN Phone OS 26 brings a polished mobile experience to FiveM servers, with clean app navigation, roleplay-friendly communication flows, and configuration-first setup for server owners.',
+        image: 'img/snphone.png',
+        fallbackPrice: '$0.00',
+        price: null,
+        currency: 'USD',
+        tags: ['Messages & Calls', 'App System', 'Roleplay Ready'],
+        frameworks: ['ESX', 'QBCore', 'Standalone'],
+        rating: { stars: 5, count: 0 },
+        youtubeId: '',
+        media: [
+          { type: 'image', src: 'img/snphone.png', thumb: 'img/snphone.png', alt: 'SN Phone OS 26 preview' },
+          { type: 'youtube', youtubeId: '', thumb: 'img/snphone.png', alt: 'SN Phone OS 26 video preview' }
+        ],
+        requirements: [
+          'FiveM server with recent artifacts.',
+          'ESX, QBCore, or standalone configuration.',
+          'oxmysql if your setup uses database-backed apps.'
+        ],
+        resmon: {
+          idle: '0.01ms',
+          active: '0.03ms',
+          server: '0.00ms',
+          memory: '375.00KiB'
+        },
+        docs: {
+          summary: 'Official setup notes, configuration references, and workflow tips for SN Phone OS 26.',
+          heroTitle: 'SN Phone OS 26 Documentation',
+          heroText: 'Set up the phone, connect your server resources, and tune the experience for your roleplay community.',
+          sections: [
+            {
+              id: 'install',
+              title: 'Install',
+              body: 'Place the resource in your server resources folder, add it to your server start order, then configure the framework and database settings before restart.',
+              list: [
+                'Drag sn-phone into your resources folder.',
+                'Add ensure sn-phone after your framework, inventory, and database resources.',
+                'Import the SQL file if your package includes one.',
+                'Restart the server and check the console for missing dependencies.'
+              ],
+              code: 'ensure oxmysql\nensure qb-core\nensure sn-phone'
+            },
+            {
+              id: 'personalization',
+              title: 'Personalization',
+              body: 'Most server-specific behavior should be edited from the config file. Update labels, enabled apps, framework mode, item names, and command permissions there.',
+              code: "Config = {\n  Framework = 'qb',\n  Locale = 'en',\n  PhoneItem = 'phone',\n  EnableBanking = true,\n  EnableDispatch = true,\n  Debug = false\n}"
+            },
+            {
+              id: 'integrations',
+              title: 'Integrations',
+              body: 'Enable only the integrations your server uses so the phone stays fast and easy to maintain.',
+              list: [
+                'Banking hooks for balances and transfers.',
+                'Dispatch hooks for emergency or job alerts.',
+                'Custom app slots for server-specific systems.'
+              ]
+            },
+            {
+              id: 'support',
+              title: 'Support',
+              body: 'For support, prepare your server console errors, framework version, dependency list, and a short explanation of what you expected to happen.',
+              list: [
+                'Confirm all dependencies start before sn-phone.',
+                'Test with Debug enabled only while troubleshooting.',
+                'Share screenshots or console logs when opening a ticket.'
+              ]
+            }
+          ]
+        }
+      },
+      {
+        id: 'sn-dispatch',
+        tebexPackageId: 7229725,
+        name: 'SN Dispatch',
+        version: 'Example',
+        label: 'Dispatch',
+        shortDescription: 'A clean dispatch system example for FiveM teams, with alert flows, framework hooks, and configurable jobs.',
+        description: 'SN Dispatch is an example product card so you can see how another script will look in the store. Replace the media, package ID, and docs with your real product when ready.',
+        image: 'img/image-asset.jpg',
+        fallbackPrice: '$12.00',
+        price: null,
+        currency: 'USD',
+        tags: ['Alerts', 'Jobs', 'Configurable'],
+        frameworks: ['ESX', 'QBCore'],
+        rating: { stars: 5, count: 0 },
+        youtubeId: '',
+        media: [
+          { type: 'image', src: 'img/image-asset.jpg', thumb: 'img/image-asset.jpg', alt: 'SN Dispatch preview' },
+          { type: 'youtube', youtubeId: '', thumb: 'img/image-asset.jpg', alt: 'SN Dispatch video preview' }
+        ],
+        requirements: [
+          'FiveM server with ESX or QBCore.',
+          'Configured police, EMS, or custom job names.',
+          'Notification or phone dispatch integration if used.'
+        ],
+        resmon: {
+          idle: '0.00ms',
+          active: '0.02ms',
+          server: '0.00ms',
+          memory: '220.00KiB'
+        },
+        docs: {
+          summary: 'Example documentation structure for a second product.',
+          heroTitle: 'SN Dispatch Documentation',
+          heroText: 'Use this structure for install notes, personalization options, and framework integrations.',
+          sections: [
+            {
+              id: 'install',
+              title: 'Install',
+              body: 'Add the dispatch resource after your framework and notification dependencies.',
+              code: 'ensure qb-core\nensure sn-dispatch'
+            },
+            {
+              id: 'personalization',
+              title: 'Personalization',
+              body: 'Edit job names, alert labels, blip colors, and permissions from the config file.'
+            },
+            {
+              id: 'integrations',
+              title: 'Integrations',
+              body: 'Connect alerts to your phone, MDT, or emergency job resources.',
+              list: [
+                'Phone notification events.',
+                'Police and EMS job filters.',
+                'Optional custom webhook logs.'
+              ]
+            }
+          ]
+        }
+      }
+    ];
+
 // Initialize variables
     const navbar = document.getElementById('navbar');
     const mobileDropdown = document.getElementById('mobileDropdown');
     let lastScrollY = 0;
-    let docsRendered = false;
+    let currentDocsProductId = null;
+    let currentProductId = products[0]?.id || null;
+    let currentProductMediaIndex = 0;
     let activeScrollFrame = null;
 
     // Initialize theme
@@ -223,6 +306,45 @@
       loader.setAttribute('aria-hidden', active ? 'false' : 'true');
     }
 
+    function showSiteDialog(options = {}) {
+      const dialog = document.getElementById('siteDialog');
+      const kicker = document.getElementById('siteDialogKicker');
+      const title = document.getElementById('siteDialogTitle');
+      const message = document.getElementById('siteDialogMessage');
+      const confirm = document.getElementById('siteDialogConfirm');
+      const cancel = document.getElementById('siteDialogCancel');
+
+      if (!dialog || !title || !message || !confirm || !cancel) {
+        console.warn(options.message || options.title || 'SN Development');
+        return;
+      }
+
+      kicker.textContent = options.kicker || 'SN Development';
+      title.textContent = options.title || 'Notice';
+      message.textContent = options.message || '';
+      confirm.textContent = options.confirmText || 'OK';
+      cancel.textContent = options.cancelText || 'Cancel';
+      cancel.style.display = options.cancelText ? 'inline-flex' : 'none';
+
+      confirm.onclick = () => {
+        closeSiteDialog();
+        if (typeof options.onConfirm === 'function') options.onConfirm();
+      };
+
+      cancel.onclick = closeSiteDialog;
+      dialog.classList.add('active');
+      dialog.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('dialog-open');
+    }
+
+    function closeSiteDialog() {
+      const dialog = document.getElementById('siteDialog');
+      if (!dialog) return;
+      dialog.classList.remove('active');
+      dialog.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('dialog-open');
+    }
+
     async function tebexRequest(path, options = {}) {
       const response = await fetch(`https://headless.tebex.io/api${path}`, {
         headers: {
@@ -293,20 +415,73 @@
       return null;
     }
 
-    function savePendingBasket(ident) {
-      localStorage.setItem(tebexConfig.pendingBasketKey, JSON.stringify({
-        ident,
-        packageId: tebexConfig.packageId,
-        continueCheckout: false,
-        createdAt: Date.now()
-      }));
+    function getProduct(productId) {
+      return products.find(product => product.id === productId) || products[0];
     }
 
-    function savePendingCheckoutBasket(ident) {
+    function getProductByPackage(packageId) {
+      return products.find(product => String(product.tebexPackageId) === String(packageId));
+    }
+
+    function formatPrice(product) {
+      if (!product) return '';
+      if (product.price !== null && product.price !== undefined && product.price !== '') {
+        const amount = Number(product.price);
+        const currency = product.currency || 'USD';
+
+        if (!Number.isNaN(amount)) {
+          try {
+            return new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency
+            }).format(amount);
+          } catch {
+            return `$${amount.toFixed(2)}`;
+          }
+        }
+
+        return String(product.price);
+      }
+
+      return product.fallbackPrice || 'View price';
+    }
+
+    function getProductHash(productId) {
+      return `#product-${productId}`;
+    }
+
+    function getDocsHash(productId, sectionId = '') {
+      return sectionId ? `#docs-${productId}-${sectionId}` : `#docs-${productId}`;
+    }
+
+    function parseDocsHash(hash) {
+      if (!hash || hash === '#docs') {
+        return { productId: products[0]?.id, sectionId: '' };
+      }
+
+      const clean = hash.replace('#docs-', '');
+      const product = products
+        .slice()
+        .sort((a, b) => b.id.length - a.id.length)
+        .find(item => clean === item.id || clean.startsWith(`${item.id}-`));
+
+      if (!product) {
+        return { productId: products[0]?.id, sectionId: '' };
+      }
+
+      return {
+        productId: product.id,
+        sectionId: clean === product.id ? '' : clean.slice(product.id.length + 1)
+      };
+    }
+
+    function savePendingBasket(ident, productId, continueCheckout = false) {
+      const product = getProduct(productId);
       localStorage.setItem(tebexConfig.pendingBasketKey, JSON.stringify({
         ident,
-        packageId: tebexConfig.packageId,
-        continueCheckout: true,
+        productId: product.id,
+        packageId: product.tebexPackageId,
+        continueCheckout,
         createdAt: Date.now()
       }));
     }
@@ -314,7 +489,7 @@
     function readPendingBasket() {
       try {
         const pending = JSON.parse(localStorage.getItem(tebexConfig.pendingBasketKey));
-        if (!pending?.ident || pending.packageId !== tebexConfig.packageId) return null;
+        if (!pending?.ident || !getProductByPackage(pending.packageId)) return null;
 
         const maxAge = 1000 * 60 * 30;
         if (Date.now() - pending.createdAt > maxAge) {
@@ -332,18 +507,21 @@
       localStorage.removeItem(tebexConfig.pendingBasketKey);
     }
 
-    function saveAuthedBasket(ident) {
+    function saveAuthedBasket(ident, productId) {
+      const product = getProduct(productId);
       localStorage.setItem(tebexConfig.authedBasketKey, JSON.stringify({
         ident,
-        packageId: tebexConfig.packageId,
+        productId: product.id,
+        packageId: product.tebexPackageId,
         createdAt: Date.now()
       }));
     }
 
-    function readAuthedBasket() {
+    function readAuthedBasket(productId) {
       try {
         const basket = JSON.parse(localStorage.getItem(tebexConfig.authedBasketKey));
-        if (!basket?.ident || basket.packageId !== tebexConfig.packageId) return null;
+        const product = getProduct(productId || basket?.productId);
+        if (!basket?.ident || String(basket.packageId) !== String(product.tebexPackageId)) return null;
 
         const maxAge = 1000 * 60 * 30;
         if (Date.now() - basket.createdAt > maxAge) {
@@ -379,9 +557,14 @@
       return basketIdent;
     }
 
-    async function openFiveMLogin(continueCheckout = false) {
+    async function openFiveMLogin(continueCheckout = false, productId = currentProductId) {
+      const product = getProduct(productId);
+
       if (!window.location.protocol.startsWith('http')) {
-        alert('Para iniciar sesion con FiveM, primero publica la web en una URL http/https.');
+        showSiteDialog({
+          title: 'Publish required',
+          message: 'Para iniciar sesion con FiveM, primero publica la web en una URL http/https.'
+        });
         return;
       }
 
@@ -389,11 +572,7 @@
         setPageLoader(true, 'Opening FiveM login');
 
         const basketIdent = await createTebexBasket();
-        if (continueCheckout) {
-          savePendingCheckoutBasket(basketIdent);
-        } else {
-          savePendingBasket(basketIdent);
-        }
+        savePendingBasket(basketIdent, product.id, continueCheckout);
 
         const authReturnUrl = encodeURIComponent(getTebexReturnUrl('auth-return'));
         const auth = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets/${basketIdent}/auth?returnUrl=${authReturnUrl}`, {
@@ -410,33 +589,41 @@
       } catch (error) {
         setPageLoader(false);
         console.error(error);
-        alert(`No se pudo abrir el login de FiveM: ${error.message}`);
+        showSiteDialog({
+          title: 'FiveM login unavailable',
+          message: `No se pudo abrir el login integrado de FiveM: ${error.message}`,
+          confirmText: 'Open Tebex',
+          cancelText: 'Close',
+          onConfirm: () => openOfficialTebexPackage(product.id)
+        });
       }
     }
 
-    function openOfficialTebexPackage() {
-      const packageUrl = `${tebexConfig.webstoreUrl}/package/${tebexConfig.packageId}`;
+    function openOfficialTebexPackage(productId = currentProductId) {
+      const product = getProduct(productId);
+      const packageUrl = `${tebexConfig.webstoreUrl}/package/${product.tebexPackageId}`;
       clearPendingBasket();
       clearAuthedBasket();
       setPageLoader(true, 'Opening Tebex');
       window.location.href = packageUrl;
     }
 
-    async function addPackageAndOpenCheckout(basketIdent) {
-      setPageLoader(true, 'Adding SN Phone');
+    async function addPackageAndOpenCheckout(basketIdent, productId = currentProductId) {
+      const product = getProduct(productId);
+      setPageLoader(true, `Adding ${product.name}`);
 
       try {
         await tebexRequest(`/baskets/${basketIdent}/packages`, {
           method: 'POST',
           body: JSON.stringify({
-            package_id: String(tebexConfig.packageId),
+            package_id: String(product.tebexPackageId),
             quantity: 1
           })
         });
       } catch (error) {
         if (error.message.toLowerCase().includes('login')) {
           clearAuthedBasket();
-          await openFiveMLogin(true);
+          await openFiveMLogin(true, product.id);
           return;
         }
 
@@ -456,20 +643,27 @@
       window.location.href = checkoutUrl;
     }
 
-    async function startTebexCheckout() {
-      const authedBasket = readAuthedBasket();
+    async function startTebexCheckout(productId = currentProductId) {
+      const product = getProduct(productId);
+      const authedBasket = readAuthedBasket(product.id);
 
       if (!authedBasket) {
-        await openFiveMLogin(true);
+        await openFiveMLogin(true, product.id);
         return;
       }
 
       try {
-        await addPackageAndOpenCheckout(authedBasket.ident);
+        await addPackageAndOpenCheckout(authedBasket.ident, product.id);
       } catch (error) {
         setPageLoader(false);
         console.error(error);
-        alert(`No se pudo iniciar el checkout: ${error.message}`);
+        showSiteDialog({
+          title: 'Checkout unavailable',
+          message: `No se pudo iniciar el checkout integrado: ${error.message}`,
+          confirmText: 'Open Tebex',
+          cancelText: 'Close',
+          onConfirm: () => openOfficialTebexPackage(product.id)
+        });
       }
     }
 
@@ -482,23 +676,191 @@
 
       try {
         clearPendingBasket();
-        saveAuthedBasket(pending.ident);
+        saveAuthedBasket(pending.ident, pending.productId);
 
         if (pending.continueCheckout) {
-          await addPackageAndOpenCheckout(pending.ident);
+          await addPackageAndOpenCheckout(pending.ident, pending.productId);
           return;
         }
 
         setPageLoader(false);
-        alert('Sesion de FiveM conectada. Ahora puedes pulsar Buy Now para continuar.');
+        showSiteDialog({
+          title: 'FiveM connected',
+          message: 'Sesion de FiveM conectada. Ahora puedes pulsar Buy Now para continuar.'
+        });
       } catch (error) {
         setPageLoader(false);
         console.error(error);
-        alert(`No se pudo continuar el checkout: ${error.message}`);
+        showSiteDialog({
+          title: 'Checkout could not continue',
+          message: `No se pudo continuar el checkout: ${error.message}`
+        });
       }
     }
 
-    function showSubPage(pageName, hash = `#${pageName}`) {
+    function renderProducts() {
+      const list = document.getElementById('productsList');
+      if (!list) return;
+
+      list.innerHTML = products.map((product, index) => {
+        const tags = product.tags.map((tag, tagIndex) => {
+          const classes = ['script-tag-green', 'script-tag-orange', 'script-tag-purple', 'script-tag-blue'];
+          return `<span class="${classes[tagIndex % classes.length]}">${tag}</span>`;
+        }).join('');
+
+        return `
+          <article class="script-item reveal reveal-delay-${Math.min(index + 1, 4)}">
+            <div class="script-item-inner">
+              <div class="script-content">
+                <div class="script-heading-row">
+                  <span class="script-label script-tag-blue">${product.label}</span>
+                  <span class="script-price">${formatPrice(product)}</span>
+                </div>
+                <h3>${product.name} - ${product.version}</h3>
+                <p>${product.shortDescription}</p>
+                <div class="script-meta">${tags}</div>
+                <div class="script-actions">
+                  <button class="btn-outline" type="button" data-product-details="${product.id}">Details</button>
+                  <button class="btn-primary" type="button" data-tebex-buy data-product-id="${product.id}">Buy Now</button>
+                  <button class="btn-outline" type="button" data-product-docs="${product.id}">Documentation</button>
+                </div>
+              </div>
+              <button class="script-preview script-preview-phone product-preview-button" type="button" data-product-details="${product.id}" aria-label="Open ${product.name} details">
+                <img src="${product.image}" alt="${product.name} preview">
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      initScrollReveal();
+    }
+
+    async function loadProductPrices() {
+      try {
+        const payload = await tebexRequest(`/accounts/${tebexConfig.publicToken}/packages`);
+        const packages = payload?.data || payload || [];
+
+        if (!Array.isArray(packages)) return;
+
+        packages.forEach(item => {
+          const product = getProductByPackage(item.id);
+          if (!product) return;
+
+          product.price = item.total_price ?? item.base_price ?? item.price ?? product.price;
+          product.currency = item.currency || product.currency || 'USD';
+          if (item.name) product.tebexName = item.name;
+          if (item.image && product.imageFromTebex) product.image = item.image;
+        });
+
+        renderProducts();
+        if (currentProductId && document.getElementById('productPage')?.classList.contains('active')) {
+          renderProductDetail(currentProductId);
+        }
+      } catch (error) {
+        console.warn('Could not load Tebex prices:', error);
+      }
+    }
+
+    function getMediaEmbed(media) {
+      if (!media) return '';
+
+      if (media.type === 'youtube') {
+        const id = media.youtubeId || media.src;
+        if (!id) {
+          return `
+            <div class="product-video-placeholder">
+              <img src="${media.thumb || 'img/image-asset.jpg'}" alt="${media.alt || 'Video preview'}">
+              <div>
+                <span>Video preview</span>
+                <strong>Add a YouTube ID in app.js</strong>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="product-video-frame">
+            <iframe
+              src="https://www.youtube.com/embed/${id}"
+              title="${media.alt || 'Product video'}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+        `;
+      }
+
+      return `<img src="${media.src}" alt="${media.alt || 'Product preview'}">`;
+    }
+
+    function renderProductDetail(productId) {
+      const product = getProduct(productId);
+      const detail = document.getElementById('productDetail');
+      if (!detail || !product) return;
+
+      currentProductId = product.id;
+      const media = product.media?.length ? product.media : [{ type: 'image', src: product.image, thumb: product.image, alt: product.name }];
+      currentProductMediaIndex = Math.min(currentProductMediaIndex, media.length - 1);
+      const activeMedia = media[currentProductMediaIndex] || media[0];
+      const frameworkPills = product.frameworks.map(item => `<span>${item}</span>`).join('');
+      const rating = `${'*'.repeat(product.rating?.stars || 5)} (${product.rating?.count || 0})`;
+      const requirements = product.requirements.map(item => `<li>${item}</li>`).join('');
+
+      detail.innerHTML = `
+        <div class="product-detail-grid">
+          <section class="product-media-column">
+            <div class="product-main-media">
+              ${getMediaEmbed(activeMedia)}
+            </div>
+            <div class="product-thumbs" aria-label="${product.name} media">
+              ${media.map((item, index) => `
+                <button type="button" class="${index === currentProductMediaIndex ? 'active' : ''}" data-product-media="${index}">
+                  <img src="${item.thumb || item.src || product.image}" alt="${item.alt || product.name}">
+                  ${item.type === 'youtube' ? '<span class="media-play">Play</span>' : ''}
+                </button>
+              `).join('')}
+            </div>
+          </section>
+
+          <aside class="product-detail-side">
+            <button class="product-back" type="button" data-main-page data-scroll-target="#scripts">Back to store</button>
+            <h1>${product.name}</h1>
+            <div class="product-rating">${rating}</div>
+            <div class="product-frameworks">${frameworkPills}</div>
+            <p class="product-detail-price">${formatPrice(product)}</p>
+            <div class="product-buy-stack">
+              <button class="btn-outline product-login-btn" type="button" data-tebex-login data-product-id="${product.id}">Connect FiveM</button>
+              <button class="btn-primary product-buy-btn" type="button" data-tebex-buy data-product-id="${product.id}">Buy Now</button>
+            </div>
+
+            <div class="product-info-list">
+              <details open>
+                <summary>Description</summary>
+                <p>${product.description}</p>
+              </details>
+              <details>
+                <summary>Requirements</summary>
+                <ul>${requirements}</ul>
+              </details>
+              <div class="product-doc-card">
+                <span>Documentation</span>
+                <button class="btn-outline" type="button" data-product-docs="${product.id}">Open Documentation</button>
+              </div>
+              <div class="product-resmon">
+                <span>Resmon</span>
+                <div class="resmon-grid">
+                  <div><strong>${product.resmon.idle}</strong><small>Idle client</small></div>
+                  <div><strong>${product.resmon.server}</strong><small>Server load</small></div>
+                  <div><strong>${product.resmon.memory}</strong><small>Client memory</small></div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      `;
+    }
+
+    function showSubPage(pageName, hash = `#${pageName}`, options = {}) {
       const mainPage = document.getElementById('mainPage');
       const subPages = document.querySelectorAll('.sub-page');
       const targetPage = document.getElementById(pageName + 'Page');
@@ -506,8 +868,13 @@
       if (!targetPage) return;
 
       if (pageName === 'docs') {
-        renderDocumentation();
+        renderDocumentation(options.productId || products[0]?.id);
         setPageLoader(true, 'Opening documentation');
+      }
+
+      if (pageName === 'product') {
+        renderProductDetail(options.productId || currentProductId || products[0]?.id);
+        setPageLoader(true, 'Opening details');
       }
       
       mainPage.classList.add('hidden');
@@ -522,9 +889,9 @@
         if (hash === '#docs' || hash.startsWith('#docs-')) {
           updateNavState('#docs');
         }
-      }, pageName === 'docs' ? 320 : 100);
+      }, (pageName === 'docs' || pageName === 'product') ? 320 : 100);
 
-      if (pageName === 'docs') {
+      if (pageName === 'docs' || pageName === 'product') {
         setTimeout(() => setPageLoader(false), 720);
       }
     }
@@ -546,8 +913,10 @@
       }, 100);
     }
 
-    function renderDocumentation() {
-      if (docsRendered) return;
+    function renderDocumentation(productId = products[0]?.id) {
+      const product = getProduct(productId);
+      if (!product) return;
+      if (currentDocsProductId === product.id) return;
 
       const title = document.getElementById('docsTitle');
       const summary = document.getElementById('docsSummary');
@@ -556,24 +925,39 @@
 
       if (!title || !summary || !nav || !content) return;
 
-      title.textContent = documentationContent.title;
-      summary.textContent = documentationContent.summary;
+      currentDocsProductId = product.id;
+      title.textContent = product.name;
+      summary.textContent = product.docs.summary;
+      nav.innerHTML = '';
+      content.innerHTML = '';
 
       const hero = document.createElement('section');
       hero.className = 'docs-hero';
 
       const heroTitle = document.createElement('h2');
-      heroTitle.textContent = documentationContent.heroTitle;
+      heroTitle.textContent = product.docs.heroTitle;
 
       const heroText = document.createElement('p');
-      heroText.textContent = documentationContent.heroText;
+      heroText.textContent = product.docs.heroText;
 
       hero.append(heroTitle, heroText);
       content.appendChild(hero);
 
-      documentationContent.sections.forEach((section, index) => {
+      const selector = document.createElement('div');
+      selector.className = 'docs-product-switcher';
+      products.forEach(item => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = item.name;
+        button.classList.toggle('active', item.id === product.id);
+        button.dataset.productDocs = item.id;
+        selector.appendChild(button);
+      });
+      nav.appendChild(selector);
+
+      product.docs.sections.forEach((section, index) => {
         const navLink = document.createElement('a');
-        navLink.href = `#docs-${section.id}`;
+        navLink.href = getDocsHash(product.id, section.id);
         navLink.textContent = section.title;
         if (index === 0) {
           navLink.classList.add('active');
@@ -582,7 +966,7 @@
 
         const article = document.createElement('section');
         article.className = 'docs-section';
-        article.id = `docs-${section.id}`;
+        article.id = `docs-${product.id}-${section.id}`;
 
         const heading = document.createElement('h3');
         heading.textContent = section.title;
@@ -615,28 +999,38 @@
 
         content.appendChild(article);
       });
-
-      docsRendered = true;
     }
 
     function openHashTarget(hash) {
       if (!hash) return;
 
       if (hash === '#docs' || hash.startsWith('#docs-')) {
-        showSubPage('docs', hash);
+        const docsTarget = parseDocsHash(hash);
+        showSubPage('docs', hash, { productId: docsTarget.productId });
         updateNavState('#docs');
 
-        if (hash.startsWith('#docs-')) {
+        if (docsTarget.sectionId) {
           setTimeout(() => {
-            const target = document.querySelector(hash);
+            const sectionHash = getDocsHash(docsTarget.productId, docsTarget.sectionId);
+            const target = document.querySelector(sectionHash);
             document.querySelectorAll('.docs-nav a').forEach(navLink => {
-              navLink.classList.toggle('active', navLink.getAttribute('href') === hash);
+              navLink.classList.toggle('active', navLink.getAttribute('href') === sectionHash);
             });
             if (target) {
               smoothScrollTo(getScrollTargetPosition(target, 118), 850);
             }
           }, 760);
         }
+
+        return;
+      }
+
+      if (hash.startsWith('#product-')) {
+        const productId = hash.replace('#product-', '');
+        const product = getProduct(productId);
+        if (currentProductId !== product.id) currentProductMediaIndex = 0;
+        showSubPage('product', getProductHash(product.id), { productId: product.id });
+        updateNavState('#scripts');
       }
     }
 
@@ -651,20 +1045,58 @@
         link.addEventListener('click', closeMobileMenu);
       });
 
-      document.querySelectorAll('[data-sub-page]').forEach(button => {
-        button.addEventListener('click', () => showSubPage(button.dataset.subPage));
-      });
+      document.addEventListener('click', event => {
+        const subPageButton = event.target.closest('[data-sub-page]');
+        if (subPageButton) {
+          showSubPage(subPageButton.dataset.subPage);
+          return;
+        }
 
-      document.querySelectorAll('[data-main-page]').forEach(button => {
-        button.addEventListener('click', () => showMainPage());
-      });
+        const mainPageButton = event.target.closest('[data-main-page]');
+        if (mainPageButton) {
+          const targetHash = mainPageButton.dataset.scrollTarget || '';
+          showMainPage(targetHash);
+          if (targetHash) {
+            setTimeout(() => {
+              const target = document.querySelector(targetHash);
+              if (target) smoothScrollTo(getScrollTargetPosition(target, 100), 700);
+            }, 180);
+          }
+          return;
+        }
 
-      document.querySelectorAll('[data-tebex-buy]').forEach(button => {
-        button.addEventListener('click', startTebexCheckout);
-      });
+        const detailButton = event.target.closest('[data-product-details]');
+        if (detailButton) {
+          const product = getProduct(detailButton.dataset.productDetails);
+          if (currentProductId !== product.id) currentProductMediaIndex = 0;
+          openHashTarget(getProductHash(product.id));
+          return;
+        }
 
-      document.querySelectorAll('[data-tebex-login]').forEach(button => {
-        button.addEventListener('click', () => openFiveMLogin(false));
+        const docsButton = event.target.closest('[data-product-docs]');
+        if (docsButton) {
+          const product = getProduct(docsButton.dataset.productDocs);
+          openHashTarget(getDocsHash(product.id));
+          return;
+        }
+
+        const mediaButton = event.target.closest('[data-product-media]');
+        if (mediaButton) {
+          currentProductMediaIndex = Number(mediaButton.dataset.productMedia) || 0;
+          renderProductDetail(currentProductId);
+          return;
+        }
+
+        const buyButton = event.target.closest('[data-tebex-buy]');
+        if (buyButton) {
+          startTebexCheckout(buyButton.dataset.productId || currentProductId);
+          return;
+        }
+
+        const loginButton = event.target.closest('[data-tebex-login]');
+        if (loginButton) {
+          openFiveMLogin(false, loginButton.dataset.productId || currentProductId);
+        }
       });
 
       document.getElementById('docsNav')?.addEventListener('click', event => {
@@ -692,6 +1124,14 @@
         image.addEventListener('error', () => {
           image.style.display = 'none';
         });
+      });
+
+      document.getElementById('siteDialog')?.addEventListener('click', event => {
+        if (event.target.id === 'siteDialog') closeSiteDialog();
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeSiteDialog();
       });
     }
 
@@ -764,7 +1204,7 @@
         
         e.preventDefault();
 
-        if (href === '#docs' || href.startsWith('#docs-')) {
+        if (href === '#docs' || href.startsWith('#docs-') || href.startsWith('#product-')) {
           openHashTarget(href);
           closeMobileMenu();
           return;
@@ -851,17 +1291,19 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
       initScrollReveal();
       animateCounters();
       initNavActive();
       openHashTarget(window.location.hash);
       handleTebexReturn();
+      loadProductPrices();
     });
 
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash;
 
-      if (hash === '#docs' || hash.startsWith('#docs-')) {
+      if (hash === '#docs' || hash.startsWith('#docs-') || hash.startsWith('#product-')) {
         openHashTarget(hash);
         return;
       }
