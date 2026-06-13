@@ -268,6 +268,31 @@
       return ident ? `https://pay.tebex.io/${ident}` : null;
     }
 
+    function findUrlDeep(value, matcher) {
+      if (!value) return null;
+
+      if (typeof value === 'string') {
+        return matcher(value) ? value : null;
+      }
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const found = findUrlDeep(item, matcher);
+          if (found) return found;
+        }
+        return null;
+      }
+
+      if (typeof value === 'object') {
+        for (const item of Object.values(value)) {
+          const found = findUrlDeep(item, matcher);
+          if (found) return found;
+        }
+      }
+
+      return null;
+    }
+
     function savePendingBasket(ident) {
       localStorage.setItem(tebexConfig.pendingBasketKey, JSON.stringify({
         ident,
@@ -375,10 +400,9 @@
           method: 'GET'
         });
 
-        const authLink = Array.isArray(auth)
-          ? auth[0]?.url
-          : auth?.value?.[0]?.url || auth?.data?.[0]?.url;
+        const authLink = findUrlDeep(auth, value => value.includes('ident.tebex.io') || value.includes('/authenticate/handle'));
         if (!authLink) {
+          console.log('Tebex auth response:', auth);
           throw new Error('Tebex did not return a FiveM login URL');
         }
 
