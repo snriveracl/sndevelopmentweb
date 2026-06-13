@@ -125,7 +125,8 @@
       publicToken: '11bzo-d17911297d5f27208d2a2a048a2c86ba742f9ab2',
       packageId: 7390265,
       webstoreUrl: 'https://sn-development-store.tebex.io',
-      pendingBasketKey: 'sn_tebex_pending_basket'
+      pendingBasketKey: 'sn_tebex_pending_basket',
+      authedBasketKey: 'sn_tebex_authed_basket'
     };
 
 // Initialize variables
@@ -271,6 +272,16 @@
       localStorage.setItem(tebexConfig.pendingBasketKey, JSON.stringify({
         ident,
         packageId: tebexConfig.packageId,
+        continueCheckout: false,
+        createdAt: Date.now()
+      }));
+    }
+
+    function savePendingCheckoutBasket(ident) {
+      localStorage.setItem(tebexConfig.pendingBasketKey, JSON.stringify({
+        ident,
+        packageId: tebexConfig.packageId,
+        continueCheckout: true,
         createdAt: Date.now()
       }));
     }
@@ -296,9 +307,91 @@
       localStorage.removeItem(tebexConfig.pendingBasketKey);
     }
 
+    function saveAuthedBasket(ident) {
+      localStorage.setItem(tebexConfig.authedBasketKey, JSON.stringify({
+        ident,
+        packageId: tebexConfig.packageId,
+        createdAt: Date.now()
+      }));
+    }
+
+    function readAuthedBasket() {
+      try {
+        const basket = JSON.parse(localStorage.getItem(tebexConfig.authedBasketKey));
+        if (!basket?.ident || basket.packageId !== tebexConfig.packageId) return null;
+
+        const maxAge = 1000 * 60 * 30;
+        if (Date.now() - basket.createdAt > maxAge) {
+          localStorage.removeItem(tebexConfig.authedBasketKey);
+          return null;
+        }
+
+        return basket;
+      } catch {
+        return null;
+      }
+    }
+
+    function clearAuthedBasket() {
+      localStorage.removeItem(tebexConfig.authedBasketKey);
+    }
+
+    async function createTebexBasket() {
+      const basket = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets`, {
+        method: 'POST',
+        body: JSON.stringify({
+          complete_url: getTebexReturnUrl('complete'),
+          cancel_url: getTebexReturnUrl('cancel'),
+          complete_auto_redirect: true
+        })
+      });
+
+      const basketIdent = basket?.data?.ident;
+      if (!basketIdent) {
+        throw new Error('Tebex did not return a basket identifier');
+      }
+
+      return basketIdent;
+    }
+
+    async function openFiveMLogin(continueCheckout = false) {
+      if (!window.location.protocol.startsWith('http')) {
+        alert('Para iniciar sesion con FiveM, primero publica la web en una URL http/https.');
+        return;
+      }
+
+      try {
+        setPageLoader(true, 'Opening FiveM login');
+
+        const basketIdent = await createTebexBasket();
+        if (continueCheckout) {
+          savePendingCheckoutBasket(basketIdent);
+        } else {
+          savePendingBasket(basketIdent);
+        }
+
+        const authReturnUrl = encodeURIComponent(getTebexReturnUrl('auth-return'));
+        const auth = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets/${basketIdent}/auth?returnUrl=${authReturnUrl}`, {
+          method: 'GET'
+        });
+
+        const authLink = auth?.value?.[0]?.url || auth?.data?.[0]?.url;
+        if (!authLink) {
+          throw new Error('Tebex did not return a FiveM login URL');
+        }
+
+        window.location.href = authLink;
+      } catch (error) {
+        setPageLoader(false);
+        console.error(error);
+        alert(`No se pudo abrir el login de FiveM: ${error.message}`);
+      }
+    }
+
     function openOfficialTebexPackage() {
       const packageUrl = `${tebexConfig.webstoreUrl}/package/${tebexConfig.packageId}`;
       clearPendingBasket();
+      clearAuthedBasket();
       setPageLoader(true, 'Opening Tebex');
       window.location.href = packageUrl;
     }
@@ -316,8 +409,8 @@
         });
       } catch (error) {
         if (error.message.toLowerCase().includes('login')) {
-          alert('Tebex no pudo validar el login de FiveM desde el checkout integrado. Te enviaremos a la pagina oficial del paquete en Tebex para completar la compra.');
-          openOfficialTebexPackage();
+          clearAuthedBasket();
+          await openFiveMLogin(true);
           return;
         }
 
@@ -333,47 +426,20 @@
       }
 
       clearPendingBasket();
+      clearAuthedBasket();
       window.location.href = checkoutUrl;
     }
 
     async function startTebexCheckout() {
-      if (!window.location.protocol.startsWith('http')) {
-        alert('Para completar el checkout de Tebex, primero publica la web en una URL http/https.');
+      const authedBasket = readAuthedBasket();
+
+      if (!authedBasket) {
+        await openFiveMLogin(true);
         return;
       }
 
       try {
-        setPageLoader(true, 'Preparing checkout');
-
-        const basket = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets`, {
-          method: 'POST',
-          body: JSON.stringify({
-            complete_url: getTebexReturnUrl('complete'),
-            cancel_url: getTebexReturnUrl('cancel'),
-            complete_auto_redirect: true
-          })
-        });
-
-        const basketIdent = basket?.data?.ident;
-        if (!basketIdent) {
-          throw new Error('Tebex did not return a basket identifier');
-        }
-
-        savePendingBasket(basketIdent);
-
-        setPageLoader(true, 'Opening FiveM login');
-        const authReturnUrl = encodeURIComponent(getTebexReturnUrl('auth-return'));
-        const auth = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets/${basketIdent}/auth?returnUrl=${authReturnUrl}`, {
-          method: 'GET'
-        });
-
-        const authLink = auth?.value?.[0]?.url || auth?.data?.[0]?.url;
-        if (authLink) {
-          window.location.href = authLink;
-          return;
-        }
-
-        await addPackageAndOpenCheckout(basketIdent);
+        await addPackageAndOpenCheckout(authedBasket.ident);
       } catch (error) {
         setPageLoader(false);
         console.error(error);
@@ -389,7 +455,16 @@
       if (!pending) return;
 
       try {
-        await addPackageAndOpenCheckout(pending.ident);
+        clearPendingBasket();
+        saveAuthedBasket(pending.ident);
+
+        if (pending.continueCheckout) {
+          await addPackageAndOpenCheckout(pending.ident);
+          return;
+        }
+
+        setPageLoader(false);
+        alert('Sesion de FiveM conectada. Ahora puedes pulsar Buy Now para continuar.');
       } catch (error) {
         setPageLoader(false);
         console.error(error);
@@ -560,6 +635,10 @@
 
       document.querySelectorAll('[data-tebex-buy]').forEach(button => {
         button.addEventListener('click', startTebexCheckout);
+      });
+
+      document.querySelectorAll('[data-tebex-login]').forEach(button => {
+        button.addEventListener('click', () => openFiveMLogin(false));
       });
 
       document.getElementById('docsNav')?.addEventListener('click', event => {
