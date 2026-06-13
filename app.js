@@ -375,7 +375,9 @@
           method: 'GET'
         });
 
-        const authLink = auth?.value?.[0]?.url || auth?.data?.[0]?.url;
+        const authLink = Array.isArray(auth)
+          ? auth[0]?.url
+          : auth?.value?.[0]?.url || auth?.data?.[0]?.url;
         if (!authLink) {
           throw new Error('Tebex did not return a FiveM login URL');
         }
