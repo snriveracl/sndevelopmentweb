@@ -124,6 +124,7 @@
     const tebexConfig = {
       publicToken: '11bzo-d17911297d5f27208d2a2a048a2c86ba742f9ab2',
       packageId: 7390265,
+      webstoreUrl: 'https://sn-development-store.tebex.io',
       pendingBasketKey: 'sn_tebex_pending_basket'
     };
 
@@ -295,16 +296,33 @@
       localStorage.removeItem(tebexConfig.pendingBasketKey);
     }
 
+    function openOfficialTebexPackage() {
+      const packageUrl = `${tebexConfig.webstoreUrl}/package/${tebexConfig.packageId}`;
+      clearPendingBasket();
+      setPageLoader(true, 'Opening Tebex');
+      window.location.href = packageUrl;
+    }
+
     async function addPackageAndOpenCheckout(basketIdent) {
       setPageLoader(true, 'Adding SN Phone');
 
-      await tebexRequest(`/baskets/${basketIdent}/packages`, {
-        method: 'POST',
-        body: JSON.stringify({
-          package_id: String(tebexConfig.packageId),
-          quantity: 1
-        })
-      });
+      try {
+        await tebexRequest(`/baskets/${basketIdent}/packages`, {
+          method: 'POST',
+          body: JSON.stringify({
+            package_id: String(tebexConfig.packageId),
+            quantity: 1
+          })
+        });
+      } catch (error) {
+        if (error.message.toLowerCase().includes('login')) {
+          alert('Tebex no pudo validar el login de FiveM desde el checkout integrado. Te enviaremos a la pagina oficial del paquete en Tebex para completar la compra.');
+          openOfficialTebexPackage();
+          return;
+        }
+
+        throw error;
+      }
 
       setPageLoader(true, 'Opening checkout');
       const basket = await tebexRequest(`/accounts/${tebexConfig.publicToken}/baskets/${basketIdent}`);
