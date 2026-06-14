@@ -70,6 +70,11 @@
       authedBasketKey: 'sn_tebex_authed_basket'
     };
 
+    const supportFormConfig = {
+      endpointUrl: 'https://small-snow-0640sn-support-form.riverayangelcracks.workers.dev/',
+      discordTicketUrl: 'https://discord.gg/Z9mhaCbPvR'
+    };
+
     const products = [
       {
         id: 'sn-phone',
@@ -698,6 +703,80 @@
       }
     }
 
+    function getSupportFormPayload(form) {
+      const data = new FormData(form);
+      return {
+        name: String(data.get('name') || '').trim(),
+        email: String(data.get('email') || '').trim(),
+        discord: String(data.get('discord') || '').trim(),
+        product: String(data.get('product') || '').trim(),
+        requestType: String(data.get('requestType') || '').trim(),
+        message: String(data.get('message') || '').trim(),
+        website: String(data.get('website') || '').trim(),
+        pageUrl: window.location.href,
+        submittedAt: new Date().toISOString()
+      };
+    }
+
+    async function handleSupportFormSubmit(event) {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const submitButton = form.querySelector('button[type="submit"]');
+      const payload = getSupportFormPayload(form);
+
+      if (payload.website) return;
+
+      if (!payload.name || !payload.email || !payload.requestType || !payload.message) {
+        showSiteDialog({
+          title: 'Missing information',
+          message: 'Please complete name, email, request type, and message before sending.'
+        });
+        return;
+      }
+
+      if (!supportFormConfig.endpointUrl) {
+        showSiteDialog({
+          title: 'Form endpoint not configured',
+          message: 'The form is ready, but it needs a secure backend URL before it can send messages to Discord. Open a Discord ticket for now.',
+          confirmText: 'Open Discord',
+          cancelText: 'Close',
+          onConfirm: () => window.open(supportFormConfig.discordTicketUrl, '_blank', 'noopener,noreferrer')
+        });
+        return;
+      }
+
+      try {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+
+        const response = await fetch(supportFormConfig.endpointUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('The support request could not be sent');
+        }
+
+        form.reset();
+        showSiteDialog({
+          title: 'Message sent',
+          message: 'Your request was sent successfully. We will review it and reply through Discord or email.'
+        });
+      } catch (error) {
+        console.error(error);
+        showSiteDialog({
+          title: 'Message not sent',
+          message: 'The form could not send the request right now. Please open a Discord ticket and include the same information.'
+        });
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Message';
+      }
+    }
+
     function renderProducts() {
       const list = document.getElementById('productsList');
       if (!list) return;
@@ -1044,6 +1123,8 @@
       document.querySelectorAll('.mobile-link').forEach(link => {
         link.addEventListener('click', closeMobileMenu);
       });
+
+      document.getElementById('supportForm')?.addEventListener('submit', handleSupportFormSubmit);
 
       document.addEventListener('click', event => {
         const subPageButton = event.target.closest('[data-sub-page]');

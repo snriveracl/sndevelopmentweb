@@ -210,6 +210,63 @@
             <span>Ticket support through Discord</span>
           </div>
         </div>
+
+        <form id="supportForm" class="support-form reveal reveal-delay-1" novalidate>
+          <div class="support-form-heading">
+            <span class="support-eyebrow">Quick Request</span>
+            <h3>Tell us what you need</h3>
+            <p>Send a short brief and we will reply with the next steps through Discord or email.</p>
+          </div>
+
+          <div class="support-form-grid">
+            <label>
+              <span>Name *</span>
+              <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
+            </label>
+
+            <label>
+              <span>Email *</span>
+              <input type="email" name="email" placeholder="you@email.com" autocomplete="email" required>
+            </label>
+
+            <label>
+              <span>Discord</span>
+              <input type="text" name="discord" placeholder="username#0000 or user id" autocomplete="off">
+            </label>
+
+            <label>
+              <span>Product</span>
+              <select name="product">
+                <option value="SN Phone OS 26">SN Phone OS 26</option>
+                <option value="SN Dispatch">SN Dispatch</option>
+                <option value="Custom Development">Custom Development</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            <span>Request Type *</span>
+            <select name="requestType" required>
+              <option value="">Select one</option>
+              <option value="Support">Support</option>
+              <option value="Installation">Installation</option>
+              <option value="Bug Report">Bug Report</option>
+              <option value="Custom Development Quote">Custom Development Quote</option>
+              <option value="Pre-sale Question">Pre-sale Question</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Message *</span>
+            <textarea name="message" rows="6" placeholder="Tell us about your project, issue, framework, errors, or what you need." required></textarea>
+          </label>
+
+          <input class="support-honeypot" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button class="btn-primary support-submit" type="submit">Send Message</button>
+          <p class="support-form-note">For urgent help, open a ticket in Discord after sending the form.</p>
+        </form>
       </div>
     </section>
 
