@@ -75,6 +75,14 @@
       discordTicketUrl: 'https://discord.gg/Z9mhaCbPvR'
     };
 
+    const storeCategories = [
+      { id: 'all', label: 'All Products' },
+      { id: 'main', label: 'Main' },
+      { id: 'apps', label: 'Apps' },
+      { id: 'addons', label: 'Addons' },
+      { id: 'bundles', label: 'Bundles' }
+    ];
+
     const products = [
       {
         id: 'sn-phone',
@@ -82,9 +90,12 @@
         name: 'SN Phone OS 26',
         version: 'v1.0',
         label: 'Phone',
+        category: 'apps',
+        badge: 'Best Seller',
         shortDescription: 'A modern in-game phone for FiveM with apps, contacts, messaging, calls, banking hooks, and a clean OS 26 inspired interface built for roleplay servers.',
         description: 'SN Phone OS 26 brings a polished mobile experience to FiveM servers, with clean app navigation, roleplay-friendly communication flows, and configuration-first setup for server owners.',
         image: 'img/snphone.png',
+        storeImage: 'img/banner_publicidad.png',
         fallbackPrice: '$0.00',
         price: null,
         currency: 'USD',
@@ -159,9 +170,12 @@
         name: 'SN Dispatch',
         version: 'Example',
         label: 'Dispatch',
+        category: 'main',
+        badge: 'New',
         shortDescription: 'A clean dispatch system example for FiveM teams, with alert flows, framework hooks, and configurable jobs.',
         description: 'SN Dispatch is an example product card so you can see how another script will look in the store. Replace the media, package ID, and docs with your real product when ready.',
         image: 'img/image-asset.jpg',
+        storeImage: 'img/image-asset.jpg',
         fallbackPrice: '$12.00',
         price: null,
         currency: 'USD',
@@ -222,6 +236,7 @@
     let currentDocsProductId = null;
     let currentProductId = products[0]?.id || null;
     let currentProductMediaIndex = 0;
+    let currentStoreCategory = 'all';
     let activeScrollFrame = null;
 
     // Initialize theme
@@ -815,6 +830,78 @@
       initScrollReveal();
     }
 
+    function getStoreHash(category = currentStoreCategory) {
+      return category && category !== 'all' ? `#store-${category}` : '#store';
+    }
+
+    function parseStoreHash(hash) {
+      if (!hash || hash === '#store') return 'all';
+      const category = hash.replace('#store-', '');
+      return storeCategories.some(item => item.id === category) ? category : 'all';
+    }
+
+    function renderStorePage(category = currentStoreCategory) {
+      const filters = document.getElementById('storeFilters');
+      const grid = document.getElementById('storeGrid');
+      if (!filters || !grid) return;
+
+      currentStoreCategory = category || 'all';
+
+      filters.innerHTML = storeCategories.map(item => `
+        <button type="button" class="${item.id === currentStoreCategory ? 'active' : ''}" data-store-category="${item.id}">
+          ${item.label}
+        </button>
+      `).join('');
+
+      const visibleProducts = products.filter(product => {
+        return currentStoreCategory === 'all' || product.category === currentStoreCategory;
+      });
+
+      if (!visibleProducts.length) {
+        grid.innerHTML = `
+          <div class="store-empty">
+            <h2>No scripts found</h2>
+            <p>There are no products in this category yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = visibleProducts.map(product => {
+        const storeImage = product.storeImage || product.image;
+        const frameworks = product.frameworks.slice(0, 3).map(item => `<span>${item}</span>`).join('');
+        const extraCount = Math.max(0, product.frameworks.length - 3);
+        const extra = extraCount ? `<span>+${extraCount}</span>` : '';
+        const monthly = product.monthlyPrice ? `<small>or ${product.monthlyPrice}/mo</small>` : '';
+        const badge = product.badge ? `<span class="store-card-badge">${product.badge}</span>` : '';
+
+        return `
+          <article class="store-card">
+            <button class="store-card-media" type="button" data-product-details="${product.id}" aria-label="Open ${product.name} details">
+              <img src="${storeImage}" alt="${product.name} banner">
+              ${badge}
+            </button>
+            <div class="store-card-body">
+              <h2>${product.name.replace('SN ', '')}</h2>
+              <p>${product.shortDescription}</p>
+              <div class="store-card-tags">${frameworks}${extra}</div>
+              <div class="store-card-footer">
+                <div class="store-card-price">
+                  <strong>${formatPrice(product)}</strong>
+                  ${monthly}
+                  <span>VAT included</span>
+                </div>
+                <button class="store-details-btn" type="button" data-product-details="${product.id}">
+                  View Details
+                  <span aria-hidden="true">-&gt;</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
     async function loadProductPrices() {
       try {
         const payload = await tebexRequest(`/accounts/${tebexConfig.publicToken}/packages`);
@@ -833,6 +920,9 @@
         });
 
         renderProducts();
+        if (document.getElementById('storePage')?.classList.contains('active')) {
+          renderStorePage(currentStoreCategory);
+        }
         if (currentProductId && document.getElementById('productPage')?.classList.contains('active')) {
           renderProductDetail(currentProductId);
         }
@@ -902,7 +992,7 @@
           </section>
 
           <aside class="product-detail-side">
-            <button class="product-back" type="button" data-main-page data-scroll-target="#scripts">Back to store</button>
+            <button class="product-back" type="button" data-store-category="all">Back to scripts</button>
             <h1>${product.name}</h1>
             <div class="product-rating">${rating}</div>
             <div class="product-frameworks">${frameworkPills}</div>
@@ -955,6 +1045,11 @@
         renderProductDetail(options.productId || currentProductId || products[0]?.id);
         setPageLoader(true, 'Opening details');
       }
+
+      if (pageName === 'store') {
+        renderStorePage(options.category || currentStoreCategory);
+        setPageLoader(true, 'Opening scripts');
+      }
       
       mainPage.classList.add('hidden');
       subPages.forEach(page => page.classList.remove('active'));
@@ -968,9 +1063,12 @@
         if (hash === '#docs' || hash.startsWith('#docs-')) {
           updateNavState('#docs');
         }
-      }, (pageName === 'docs' || pageName === 'product') ? 320 : 100);
+        if (hash === '#store' || hash.startsWith('#store-')) {
+          updateNavState('#store');
+        }
+      }, (pageName === 'docs' || pageName === 'product' || pageName === 'store') ? 320 : 100);
 
-      if (pageName === 'docs' || pageName === 'product') {
+      if (pageName === 'docs' || pageName === 'product' || pageName === 'store') {
         setTimeout(() => setPageLoader(false), 720);
       }
     }
@@ -1083,6 +1181,13 @@
     function openHashTarget(hash) {
       if (!hash) return;
 
+      if (hash === '#store' || hash.startsWith('#store-')) {
+        const category = parseStoreHash(hash);
+        showSubPage('store', getStoreHash(category), { category });
+        updateNavState('#store');
+        return;
+      }
+
       if (hash === '#docs' || hash.startsWith('#docs-')) {
         const docsTarget = parseDocsHash(hash);
         showSubPage('docs', hash, { productId: docsTarget.productId });
@@ -1109,7 +1214,7 @@
         const product = getProduct(productId);
         if (currentProductId !== product.id) currentProductMediaIndex = 0;
         showSubPage('product', getProductHash(product.id), { productId: product.id });
-        updateNavState('#scripts');
+        updateNavState('#store');
       }
     }
 
@@ -1151,6 +1256,13 @@
           const product = getProduct(detailButton.dataset.productDetails);
           if (currentProductId !== product.id) currentProductMediaIndex = 0;
           openHashTarget(getProductHash(product.id));
+          return;
+        }
+
+        const storeCategoryButton = event.target.closest('[data-store-category]');
+        if (storeCategoryButton) {
+          const category = storeCategoryButton.dataset.storeCategory || 'all';
+          openHashTarget(getStoreHash(category));
           return;
         }
 
@@ -1285,7 +1397,7 @@
         
         e.preventDefault();
 
-        if (href === '#docs' || href.startsWith('#docs-') || href.startsWith('#product-')) {
+        if (href === '#docs' || href.startsWith('#docs-') || href.startsWith('#product-') || href === '#store' || href.startsWith('#store-')) {
           openHashTarget(href);
           closeMobileMenu();
           return;
@@ -1384,7 +1496,7 @@
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash;
 
-      if (hash === '#docs' || hash.startsWith('#docs-') || hash.startsWith('#product-')) {
+      if (hash === '#docs' || hash.startsWith('#docs-') || hash.startsWith('#product-') || hash === '#store' || hash.startsWith('#store-')) {
         openHashTarget(hash);
         return;
       }
